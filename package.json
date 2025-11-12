@@ -4,11 +4,11 @@
   "description": "HTTP proxy server with request/response logging and inspection. Perfect for frontend and backend developers to debug API calls and inspect HTTP requests during development.",
   "version": "0.0.1",
   "publisher": "dmytro-ivashchuk",
+  "icon": "media/icon.png",
   "author": {
     "name": "Dmytro Ivashchuk"
   },
   "license": "MIT",
-  "icon": "media/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/DimaIvashchuk/mirror-api-vscode-extension.git"
