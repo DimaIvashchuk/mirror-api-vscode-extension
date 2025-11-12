@@ -1,0 +1,84 @@
+{
+  "name": "mirror-api",
+  "displayName": "Mirror API",
+  "description": "HTTP proxy server with request/response logging and inspection. Perfect for frontend and backend developers to debug API calls and inspect HTTP requests during development.",
+  "version": "0.0.1",
+  "publisher": "dmytro-ivashchuk",
+  "author": {
+    "name": "Dmytro Ivashchuk"
+  },
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DimaIvashchuk/mirror-api-vscode-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DimaIvashchuk/mirror-api-vscode-extension/issues"
+  },
+  "homepage": "https://github.com/DimaIvashchuk/mirror-api-vscode-extension/blob/main/README.md",
+  "keywords": [
+    "proxy",
+    "http",
+    "https",
+    "api",
+    "debugging",
+    "network",
+    "inspector",
+    "logger",
+    "request",
+    "response",
+    "monitoring",
+    "development",
+    "frontend",
+    "backend",
+    "fetch",
+    "axios"
+  ],
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Testing",
+    "Other"
+  ],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mirror-api.startProxy",
+        "title": "Mirror API: Start Proxy Server"
+      },
+      {
+        "command": "mirror-api.showLogs",
+        "title": "Mirror API: Show Logs Panel"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./ && npm run copy-webview",
+    "copy-webview": "node -e \"require('fs').mkdirSync('out/webview', {recursive: true})\" && node -e \"require('fs').copyFileSync('src/webview/index.html', 'out/webview/index.html')\"",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.105.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "eslint": "^9.34.0",
+    "typescript": "^5.9.2",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
