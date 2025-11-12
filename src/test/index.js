@@ -9,6 +9,8 @@ const STATUS_CODES = [
   200, 201, 204, 400, 401, 403, 404, 409, 429, 500, 502, 503,
 ];
 
+const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+
 // --- Using Axios ---
 async function testAxios() {
   console.log('\n=== 🧩 Testing via Axios ===');
@@ -23,6 +25,18 @@ async function testAxios() {
     validateStatus: () => true, // Prevent Axios from throwing on non-2xx
   });
 
+  for (const method of METHODS) {
+    try {
+      const res = await api.request({
+        url: method.toLowerCase(),
+        method,
+      });
+      console.log(`[AXIOS] ${method}`, res.status, res.statusText);
+    } catch (err) {
+      console.error(`[AXIOS] ${method}: ERROR`, err.message);
+    }
+  }
+
   for (const code of STATUS_CODES) {
     try {
       const res = await api.get(`/status/${code}`);
@@ -36,6 +50,17 @@ async function testAxios() {
 // --- Using Fetch ---
 async function testFetch() {
   console.log('\n=== 🌐 Testing via Fetch ===');
+
+  for (const method of METHODS) {
+    try {
+      const res = await fetch(`http://${PROXY_HOST}:${PROXY_PORT}/http://0.0.0.0:80/${method.toLowerCase()}`, {
+        method: method,
+      });
+      console.log(`[FETCH] ${method}:`, res.status, res.statusText);
+    } catch (err) {
+      console.error(`[FETCH] ${method} 200: ERROR`, err.message);
+    }
+  }
 
   for (const code of STATUS_CODES) {
     // Route everything through your proxy
@@ -52,5 +77,5 @@ async function testFetch() {
 // --- Run both tests ---
 (async () => {
   await testAxios();
-  await testFetch();
+  // await testFetch();
 })();
