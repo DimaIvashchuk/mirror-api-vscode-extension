@@ -4,7 +4,7 @@
   "description": "HTTP proxy server with request/response logging and inspection. Perfect for frontend and backend developers to debug API calls and inspect HTTP requests during development.",
   "version": "0.0.1",
   "publisher": "dmytro-ivashchuk",
-  "icon": "media/icon.png",
+  "icon": "media/icon.webp",
   "author": {
     "name": "Dmytro Ivashchuk"
   },
