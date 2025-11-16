@@ -149,7 +149,10 @@ async function stopProxyServer() {
     }
 }
 function getWebviewContent(context, webview) {
-    const htmlPath = path.join(context.extensionPath, 'src', 'webview', 'index.html');
+    let htmlPath = path.join(context.extensionPath, 'out', 'webview', 'index.html');
+    if (!fs.existsSync(htmlPath)) {
+        htmlPath = path.join(context.extensionPath, 'src', 'webview', 'index.html');
+    }
     const html = fs.readFileSync(htmlPath, 'utf8');
     return html;
 }
