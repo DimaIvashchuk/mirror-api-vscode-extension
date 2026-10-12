@@ -9,6 +9,7 @@ export interface RequestLog {
     method: string;
     url: string;
     requestHeaders: Record<string, string | string[] | undefined>;
+    requestBody?: string;
     statusCode?: number;
     responseHeaders?: Record<string, string | string[] | undefined>;
     responseBody?: string;
@@ -168,6 +169,21 @@ export class ProxyServer {
 
             clientRes.writeHead(502, { 'Content-Type': 'text/plain' });
             clientRes.end(`Proxy Error: ${error.message}`);
+        });
+
+        // Capture request body for logging (e.g. "Copy as curl")
+        const requestChunks: Buffer[] = [];
+        let requestSize = 0;
+        clientReq.on('data', (chunk: Buffer) => {
+            requestSize += chunk.length;
+            if (requestSize <= 1024 * 1024) {
+                requestChunks.push(chunk);
+            }
+        });
+        clientReq.on('end', () => {
+            if (requestSize > 0 && requestSize <= 1024 * 1024) {
+                log.requestBody = Buffer.concat(requestChunks).toString('utf-8');
+            }
         });
 
         // Forward request body
