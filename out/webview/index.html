@@ -50,6 +50,21 @@
             transition: background-color 0.2s;
         }
 
+        .copy-curl-btn {
+            background-color: var(--vscode-button-secondaryBackground, var(--vscode-button-background));
+            color: var(--vscode-button-secondaryForeground, var(--vscode-button-foreground));
+            border: none;
+            padding: 4px 10px;
+            cursor: pointer;
+            border-radius: 2px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .copy-curl-btn:hover {
+            background-color: var(--vscode-button-secondaryHoverBackground, var(--vscode-button-hoverBackground));
+        }
+
         .clear-btn:hover {
             background-color: var(--vscode-button-hoverBackground);
         }
@@ -339,15 +354,47 @@
                         </span>
                     </summary>
                     <div class="log-content">
+                        <button class="copy-curl-btn">Copy as curl</button>
                         ${detailsContent}
                     </div>
                 </details>
             `;
 
+            const copyBtn = logEntry.querySelector('.copy-curl-btn');
+            copyBtn.addEventListener('click', () => {
+                vscode.postMessage({ command: 'copyCurl', curl: buildCurl(log) });
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => { copyBtn.textContent = 'Copy as curl'; }, 1500);
+            });
+
             logsContainer.appendChild(logEntry);
             
             // Auto-scroll to bottom
             logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        function shellQuote(text) {
+            return "'" + String(text).replace(/'/g, "'\\''") + "'";
+        }
+
+        function buildCurl(log) {
+            const skip = new Set(['host', 'content-length', 'connection', 'accept-encoding']);
+            const parts = ['curl'];
+            if (log.method && log.method !== 'GET') {
+                parts.push('-X', log.method);
+            }
+            parts.push(shellQuote(log.url));
+            for (const [key, value] of Object.entries(log.requestHeaders || {})) {
+                if (skip.has(key.toLowerCase()) || value === undefined) {
+                    continue;
+                }
+                const v = Array.isArray(value) ? value.join(', ') : value;
+                parts.push('-H', shellQuote(key + ': ' + v));
+            }
+            if (log.requestBody) {
+                parts.push('--data-raw', shellQuote(log.requestBody));
+            }
+            return parts.join(' ');
         }
 
         function getUrlPath(url) {

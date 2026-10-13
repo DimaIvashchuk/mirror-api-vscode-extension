@@ -113,7 +113,11 @@ function activate(context) {
             }, null, context.subscriptions);
             // Handle messages from webview
             logsPanel.webview.onDidReceiveMessage(message => {
-                if (message.command === 'clearLogs') {
+                if (message.command === 'copyCurl' && typeof message.curl === 'string') {
+                    vscode.env.clipboard.writeText(message.curl);
+                    vscode.window.showInformationMessage('curl command copied');
+                }
+                else if (message.command === 'clearLogs') {
                     requestLogs = [];
                     if (proxyServer) {
                         proxyServer.clearLogs();
